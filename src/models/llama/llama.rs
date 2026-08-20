@@ -11,9 +11,9 @@ kernel void my_kernel(const device float* input [[buffer(0)],
 "#;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-struct RopeScaling {
-    factor: f64,
-    type_: String,
+pub struct RopeScaling {
+    pub factor: f64,
+    pub type_: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -64,12 +64,27 @@ struct LlamaBlock {
     mlp_kernel: metal::Function,
 }
 
-impl LlamaBlock {
-    fn new(device: &Device) -> Result<Self, Box<dyn std::error::Error>> {
-        let library = device.new_library_with_source(LLAMA_KERNELS, &CompileOptions::new())?;
-        let norm = library.get_function("rms_norm", None)?;
-        let attention = library.get_function("attention", None)?;
-    }
+//impl LlamaBlock {
+//    fn new(device: &Device) -> Self {
+//        let library = device.new_library_with_source(LLAMA_KERNELS, &CompileOptions::new())?;
+//        let norm = library.get_function("rms_norm", None)?;
+//        let attention = library.get_function("attention", None)?;
+//        LlamaBlock {
+//            input_tensor: device.new_buffer(0, metal::MTLResourceOptions::StorageModeShared),
+//            attention_weights: vec![],
+//            attention_kernel: attention,
+//            attention_bias: vec![],
+//            norm,
+//            norm_bias: vec![],
+//            mlp_bias: vec![],
+//            mlp_kernel: attention,
+//        }
+//    }
+//}
+
+struct LlamaEmbedding {
+    weight: metal::Buffer,
+    bias: Option<metal::Buffer>,
 }
 
 struct Llama {

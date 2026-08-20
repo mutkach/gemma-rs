@@ -1,3 +1,5 @@
 /target
 /data
-*.un~
+!/data/kernels
+
+**.un~
